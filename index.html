@@ -3,296 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dect2868-debug · Портфолио проектов</title>
-<meta name="description" content="Портфолио dect2868-debug: ORBITA — платформа космического путешественника, ОБЗВОН — система обзвона, РРП 3.0 — ролевой Roblox-проект.">
+<title>dect2868-debug · Сайт-визитка</title>
+<meta name="description" content="Сайт-визитка dect2868-debug: ORBITA — платформа космического путешественника, ОБЗВОН — система обзвона, РРП 3.0 — ролевой Roblox-проект. Discord: thewerasa2.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#06070f;
-  --bg-soft:#0b0e1c;
-  --card:rgba(255,255,255,.035);
-  --text:#e9ecf9;
-  --muted:#98a0bd;
-  --line:rgba(255,255,255,.09);
-  --violet:#8b7bff;
-  --cyan:#3fe0ff;
-  --amber:#ffb648;
-  --red:#ff6b6b;
-  --blue:#5b8bff;
-  --green:#3fe0a0;
-  --radius:22px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.65;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-body::before{
-  content:"";
-  position:fixed;inset:0;z-index:-2;
-  background:
-    radial-gradient(900px 600px at 15% -5%,rgba(139,123,255,.22),transparent 60%),
-    radial-gradient(800px 700px at 95% 15%,rgba(63,224,255,.14),transparent 60%),
-    radial-gradient(900px 700px at 50% 110%,rgba(91,139,255,.14),transparent 60%),
-    var(--bg);
-}
-body::after{
-  content:"";
-  position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background-image:
-    radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,.5),transparent),
-    radial-gradient(1px 1px at 70% 12%,rgba(255,255,255,.4),transparent),
-    radial-gradient(1.5px 1.5px at 85% 60%,rgba(255,255,255,.35),transparent),
-    radial-gradient(1px 1px at 40% 80%,rgba(255,255,255,.35),transparent),
-    radial-gradient(1px 1px at 10% 65%,rgba(255,255,255,.3),transparent),
-    radial-gradient(1.5px 1.5px at 55% 45%,rgba(255,255,255,.3),transparent);
-  background-size:100% 100%;
-  animation:twinkle 7s ease-in-out infinite alternate;
-  opacity:.7;
-}
-@keyframes twinkle{from{opacity:.45}to{opacity:.85}}
-
-.container{width:min(1120px,92%);margin-inline:auto}
-
-/* ---------- NAV ---------- */
-.nav{
-  position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(14px);
-  background:rgba(6,7,15,.68);
-  border-bottom:1px solid var(--line);
-}
-.nav-inner{display:flex;align-items:center;gap:28px;padding:14px 0}
-.logo{
-  font-family:'Unbounded',sans-serif;font-weight:600;font-size:16px;
-  letter-spacing:.06em;text-decoration:none;color:var(--text);
-  display:flex;align-items:center;gap:10px;
-}
-.logo .dot{
-  width:9px;height:9px;border-radius:50%;
-  background:linear-gradient(135deg,var(--violet),var(--cyan));
-  box-shadow:0 0 14px rgba(139,123,255,.9);
-}
-.nav-links{display:flex;gap:24px;margin-left:auto;align-items:center}
-.nav-links a{
-  color:var(--muted);text-decoration:none;font-size:14.5px;font-weight:600;
-  transition:color .25s;
-}
-.nav-links a:hover{color:var(--text)}
-.nav-cta{
-  padding:9px 18px;border-radius:99px;font-size:14px;font-weight:700;
-  color:#08090f!important;
-  background:linear-gradient(135deg,var(--violet),var(--cyan));
-  transition:transform .25s,box-shadow .25s;
-}
-.nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(139,123,255,.35)}
-
-/* ---------- HERO ---------- */
-.hero{padding:96px 0 70px;text-align:center}
-.badge{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:8px 18px;border-radius:99px;font-size:13px;font-weight:700;
-  letter-spacing:.04em;color:var(--muted);
-  border:1px solid var(--line);background:var(--card);
-  margin-bottom:30px;
-}
-.badge .pulse{
-  width:8px;height:8px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 0 0 rgba(63,224,160,.6);animation:pulse 2.2s infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(63,224,160,.55)}
-  70%{box-shadow:0 0 0 12px rgba(63,224,160,0)}
-  100%{box-shadow:0 0 0 0 rgba(63,224,160,0)}
-}
-.hero h1{
-  font-family:'Unbounded',sans-serif;
-  font-size:clamp(2.1rem,6vw,4rem);
-  line-height:1.12;font-weight:700;letter-spacing:-.01em;
-  margin-bottom:22px;
-}
-.hero h1 .grad{
-  background:linear-gradient(100deg,var(--violet) 0%,var(--cyan) 55%,var(--blue) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.hero p{max-width:640px;margin:0 auto 38px;color:var(--muted);font-size:clamp(1rem,1.6vw,1.12rem)}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:14px 28px;border-radius:99px;text-decoration:none;
-  font-weight:700;font-size:15px;transition:transform .25s,box-shadow .25s,background .25s;
-}
-.btn-primary{
-  color:#08090f;background:linear-gradient(135deg,var(--violet),var(--cyan));
-  box-shadow:0 12px 34px rgba(139,123,255,.3);
-}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(139,123,255,.45)}
-.btn-ghost{color:var(--text);border:1px solid var(--line);background:var(--card)}
-.btn-ghost:hover{transform:translateY(-3px);background:rgba(255,255,255,.07)}
-
-/* ---------- STATS ---------- */
-.stats{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-  margin:10px auto 0;
-}
-.stat{
-  border:1px solid var(--line);background:var(--card);
-  border-radius:18px;padding:22px 16px;text-align:center;
-}
-.stat b{
-  display:block;font-family:'Unbounded',sans-serif;
-  font-size:clamp(1.5rem,3vw,2rem);
-  background:linear-gradient(135deg,var(--text),var(--cyan));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.stat span{font-size:13px;color:var(--muted);font-weight:600}
-
-/* ---------- SECTIONS ---------- */
-section{padding:80px 0}
-.sec-head{margin-bottom:44px;max-width:620px}
-.sec-head .kicker{
-  font-size:12.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--cyan);margin-bottom:12px;display:block;
-}
-.sec-head h2{
-  font-family:'Unbounded',sans-serif;font-size:clamp(1.5rem,3.6vw,2.3rem);
-  line-height:1.2;margin-bottom:14px;
-}
-.sec-head p{color:var(--muted)}
-
-/* ---------- PROJECT CARDS ---------- */
-.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.card{
-  position:relative;overflow:hidden;
-  border:1px solid var(--line);border-radius:var(--radius);
-  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
-  padding:32px;
-  transition:transform .35s,border-color .35s,box-shadow .35s;
-}
-.card::before{
-  content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s;
-  background:radial-gradient(420px 260px at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--acc) 16%,transparent),transparent 70%);
-  pointer-events:none;
-}
-.card:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--acc) 55%,transparent);box-shadow:0 24px 60px rgba(0,0,0,.5)}
-.card:hover::before{opacity:1}
-.card.wide{grid-column:1 / -1}
-.card-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
-.icon{
-  width:52px;height:52px;flex:0 0 auto;border-radius:16px;
-  display:grid;place-items:center;font-size:24px;
-  background:color-mix(in srgb,var(--acc) 16%,transparent);
-  border:1px solid color-mix(in srgb,var(--acc) 40%,transparent);
-}
-.card-num{
-  font-family:'Unbounded',sans-serif;font-size:12px;letter-spacing:.16em;
-  color:color-mix(in srgb,var(--acc) 85%,white);
-}
-.card h3{
-  font-family:'Unbounded',sans-serif;font-size:clamp(1.15rem,2.4vw,1.5rem);
-  margin-bottom:8px;line-height:1.25;
-}
-.card .tagline{color:var(--muted);font-size:14.5px;margin-bottom:18px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
-.chip{
-  font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:99px;
-  color:color-mix(in srgb,var(--acc) 80%,white);
-  border:1px solid color-mix(in srgb,var(--acc) 32%,transparent);
-  background:color-mix(in srgb,var(--acc) 9%,transparent);
-}
-.card-link{
-  display:inline-flex;align-items:center;gap:8px;
-  font-weight:800;font-size:15px;text-decoration:none;
-  color:var(--acc);transition:gap .25s,filter .25s;
-}
-.card-link:hover{gap:14px;filter:brightness(1.25)}
-.card .arrow{transition:transform .25s}
-.card-link:hover .arrow{transform:translateX(3px)}
-
-/* ---------- ABOUT ---------- */
-.about-wrap{
-  display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start;
-}
-.panel{
-  border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--card);padding:32px;
-}
-.panel h3{font-family:'Unbounded',sans-serif;font-size:1.15rem;margin-bottom:14px}
-.panel p{color:var(--muted);margin-bottom:14px;font-size:15px}
-.skill-grid{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px}
-.skill{
-  font-size:13px;font-weight:700;padding:8px 15px;border-radius:12px;
-  border:1px solid var(--line);background:rgba(255,255,255,.04);
-  transition:border-color .25s,transform .25s,color .25s;
-}
-.skill:hover{transform:translateY(-3px);border-color:var(--cyan);color:var(--cyan)}
-.facts{list-style:none;display:grid;gap:14px}
-.facts li{display:flex;gap:13px;align-items:flex-start;font-size:15px}
-.facts .mk{
-  flex:0 0 auto;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
-  background:rgba(63,224,255,.1);border:1px solid rgba(63,224,255,.28);font-size:14px;
-}
-.facts b{display:block;font-size:14.5px}
-.facts span{color:var(--muted);font-size:13.5px}
-
-/* ---------- CONTACTS ---------- */
-.contacts{
-  border:1px solid var(--line);border-radius:calc(var(--radius) + 6px);
-  background:
-    radial-gradient(600px 300px at 20% 0%,rgba(139,123,255,.16),transparent 65%),
-    radial-gradient(500px 300px at 90% 100%,rgba(63,224,255,.12),transparent 65%),
-    var(--card);
-  padding:clamp(34px,6vw,60px);text-align:center;
-}
-.contacts h2{font-family:'Unbounded',sans-serif;font-size:clamp(1.4rem,3.4vw,2.1rem);margin-bottom:14px}
-.contacts p{color:var(--muted);max-width:520px;margin:0 auto 30px}
-
-/* ---------- FOOTER ---------- */
-footer{
-  border-top:1px solid var(--line);padding:28px 0 36px;
-  color:var(--muted);font-size:13.5px;text-align:center;
-}
-footer a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
-footer a:hover{color:var(--text)}
-
-/* ---------- REVEAL ---------- */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
-.reveal.in{opacity:1;transform:none}
-
-/* ---------- RESPONSIVE ---------- */
-@media(max-width:880px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .projects{grid-template-columns:1fr}
-  .about-wrap{grid-template-columns:1fr}
-}
-@media(max-width:640px){
-  .nav-links a:not(.nav-cta){display:none}
-  .hero{padding:66px 0 50px}
-  section{padding:58px 0}
-  .card{padding:26px}
-}
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  .reveal{opacity:1;transform:none}
-  html{scroll-behavior:auto}
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav class="nav">
   <div class="container nav-inner">
-    <a class="logo" href="#top"><span class="dot"></span>DECT2868</a>
+    <a class="logo" href="index.html"><span class="dot"></span>DECT2868</a>
     <div class="nav-links">
-      <a href="#projects">Проекты</a>
-      <a href="#about">Обо мне</a>
-      <a href="#contacts">Контакты</a>
+      <a href="projects.html">Проекты</a>
+      <a href="about.html">Обо мне</a>
+      <a href="contacts.html">Контакты</a>
       <a class="nav-cta" href="https://github.com/dect2868-debug" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
@@ -305,28 +31,63 @@ footer a:hover{color:var(--text)}
      путешественника до системы контроля внимания и ролевого сообщества в Roblox.
      Здесь — все работы со ссылками.</p>
   <div class="hero-btns reveal">
-    <a class="btn btn-primary" href="#projects">Смотреть проекты ↓</a>
-    <a class="btn btn-ghost" href="https://github.com/dect2868-debug" target="_blank" rel="noopener">Профиль GitHub</a>
+    <a class="btn btn-primary" href="projects.html">Смотреть проекты ↓</a>
+    <a class="btn btn-ghost" href="contacts.html">Связаться</a>
   </div>
 
   <div class="stats reveal">
     <div class="stat"><b data-count="3">0</b><span>проекта</span></div>
     <div class="stat"><b data-count="2">0</b><span>веб-сервиса</span></div>
     <div class="stat"><b data-count="1">0</b><span>Roblox-проект</span></div>
-    <div class="stat"><b data-count="24" data-suffix="/7">0</b><span>онлайн на Pages</span></div>
+    <div class="stat"><b data-count="4">0</b><span>страницы сайта</span></div>
   </div>
 </header>
 
-<section id="projects">
+<section id="sections">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="kicker">Навигация</span>
+      <h2>Разделы сайта</h2>
+      <p>Многостраничная визитка: у каждого раздела своя страница.</p>
+    </div>
+
+    <div class="tiles">
+      <a class="tile reveal" href="projects.html" style="--acc:var(--violet)">
+        <div class="icon">🛰️</div>
+        <div class="num">01 / ПРОЕКТЫ</div>
+        <h3>Мои проекты</h3>
+        <p>Три работающих проекта: ORBITA, ОБЗВОН и РРП 3.0 — с описанием, функциями и ссылками.</p>
+        <span class="more">Открыть →</span>
+      </a>
+
+      <a class="tile reveal" href="about.html" style="--acc:var(--cyan)">
+        <div class="icon">👤</div>
+        <div class="num">02 / ПРОФИЛЬ</div>
+        <h3>Обо мне</h3>
+        <p>Чем занимаюсь, какие технологии использую и как строится моя работа над проектами.</p>
+        <span class="more">Открыть →</span>
+      </a>
+
+      <a class="tile reveal" href="contacts.html" style="--acc:var(--discord)">
+        <div class="icon">💬</div>
+        <div class="num">03 / СВЯЗЬ</div>
+        <h3>Контакты</h3>
+        <p>Discord <b>thewerasa2.0</b>, профиль на GitHub и быстрые ссылки на все проекты.</p>
+        <span class="more">Открыть →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="projects-preview">
   <div class="container">
     <div class="sec-head reveal">
       <span class="kicker">Портфолио</span>
-      <h2>Мои проекты</h2>
+      <h2>Проекты кратко</h2>
       <p>Три работающих проекта — каждый живёт на своём адресе и решает свою задачу.</p>
     </div>
 
     <div class="projects">
-
       <article class="card wide reveal" style="--acc:var(--violet)">
         <div class="card-top">
           <div class="icon">🛰️</div>
@@ -335,16 +96,15 @@ footer a:hover{color:var(--text)}
             <h3>ORBITA — сервис для космического путешественника</h3>
           </div>
         </div>
-        <p class="tagline">Единая интеллектуальная платформа, которая ведёт частного путешественника через всё путешествие:
-           от первой консультации и подготовки до полёта, пребывания в невесомости и безопасного возвращения на Землю.
+        <p class="tagline">Единая интеллектуальная платформа, которая ведёт частного путешественника через всё
+           путешествие: от подготовки до полёта и безопасного возвращения на Землю.
            Проект Федерального конкурса научных проектов · 2026.</p>
         <div class="chips">
-          <span class="chip">8 разделов исследования</span>
+          <span class="chip">8 разделов</span>
           <span class="chip">Калькулятор полёта</span>
-          <span class="chip">Живой отсчёт до старта</span>
+          <span class="chip">Живой отсчёт</span>
           <span class="chip">Профиль путешественника</span>
           <span class="chip">Прогноз рисков</span>
-          <span class="chip">Бонусы и достижения</span>
         </div>
         <a class="card-link" href="https://dect2868-debug.github.io/orbita/" target="_blank" rel="noopener">
           Открыть ORBITA <span class="arrow">→</span>
@@ -359,13 +119,12 @@ footer a:hover{color:var(--text)}
             <h3>ОБЗВОН · ROLEPLAY</h3>
           </div>
         </div>
-        <p class="tagline">Система обзвона версии 2.7 с пультом куратора: испытания внимания, замер концентрации,
-           читометр, журнал событий и итоговый отчёт по кандидату.</p>
+        <p class="tagline">Система обзвона v2.7 с пультом куратора: испытания внимания, замер концентрации,
+           читометр, журнал событий и итоговый отчёт.</p>
         <div class="chips">
           <span class="chip">Пульт куратора</span>
-          <span class="chip">Калибровка до 100 заданий</span>
+          <span class="chip">Калибровка до 100</span>
           <span class="chip">Порог доверия</span>
-          <span class="chip">Детект смены вкладок</span>
           <span class="chip">Экспорт отчёта</span>
         </div>
         <a class="card-link" href="https://dect2868-debug.github.io/obzvon/" target="_blank" rel="noopener">
@@ -381,139 +140,49 @@ footer a:hover{color:var(--text)}
             <h3>РРП 3.0 — Roblox-проект</h3>
           </div>
         </div>
-        <p class="tagline">Сайт ролевого проекта в Roblox: приём анкет в команду, отслеживание статуса заявки,
-           правила, набор модераторов и администрации.</p>
+        <p class="tagline">Сайт ролевого проекта в Roblox: приём анкет в команду, статус заявки,
+           правила и набор модераторов с администрацией.</p>
         <div class="chips">
           <span class="chip">Подача анкет</span>
           <span class="chip">Статус заявки</span>
-          <span class="chip">Правила проекта</span>
-          <span class="chip">Набор в команду</span>
+          <span class="chip">Правила</span>
           <span class="chip">Комьюнити</span>
         </div>
         <a class="card-link" href="https://dect2868-debug.github.io/-3.0/" target="_blank" rel="noopener">
           Открыть РРП 3.0 <span class="arrow">→</span>
         </a>
       </article>
+    </div>
 
+    <div class="hero-btns reveal" style="margin-top:34px">
+      <a class="btn btn-ghost" href="projects.html">Подробно о проектах →</a>
     </div>
   </div>
 </section>
 
-<section id="about">
-  <div class="container">
-    <div class="sec-head reveal">
-      <span class="kicker">Профиль</span>
-      <h2>Обо мне</h2>
-      <p>Делаю сайты и веб-сервисы самостоятельно — от идеи и вёрстки до боевых функций.</p>
-    </div>
-
-    <div class="about-wrap">
-      <div class="panel reveal">
-        <h3>Чем занимаюсь</h3>
-        <p>Пишу на чистом HTML, CSS и JavaScript — без сборщиков и фреймворков.
-           Каждый проект получает продуманный интерфейс, адаптивность под телефоны
-           и живые функции: счётчики, калькуляторы, панели управления и защиты.</p>
-        <p>Люблю сложные интерфейсы: панели кураторов, системы профилей, статистику в реальном времени
-           и всё, что выглядит как настоящий продукт.</p>
-        <div class="skill-grid">
-          <span class="skill">HTML</span>
-          <span class="skill">CSS</span>
-          <span class="skill">JavaScript</span>
-          <span class="skill">Адаптивная вёрстка</span>
-          <span class="skill">UX интерфейсов</span>
-          <span class="skill">GitHub Pages</span>
-          <span class="skill">Веб-панели</span>
-          <span class="skill">LocalStorage / API</span>
-        </div>
-      </div>
-
-      <div class="panel reveal">
-        <h3>Факты</h3>
-        <ul class="facts">
-          <li>
-            <span class="mk">🛰️</span>
-            <div><b>ORBITA</b><span>Научный конкурсный проект: 8 разделов, калькулятор и профиль путешественника.</span></div>
-          </li>
-          <li>
-            <span class="mk">📞</span>
-            <div><b>ОБЗВОН v2.7</b><span>Многофункциональная система проверки внимания с пультом куратора.</span></div>
-          </li>
-          <li>
-            <span class="mk">🎮</span>
-            <div><b>РРП 3.0</b><span>Ролевой Roblox-проект с анкетами, правилами и живым комьюнити.</span></div>
-          </li>
-          <li>
-            <span class="mk">🚀</span>
-            <div><b>Регулярные обновления</b><span>Проекты развиваются: новые функции, панели и улучшения выходят постоянно.</span></div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contacts">
+<section id="cta">
   <div class="container">
     <div class="contacts reveal">
-      <h2>Связаться и посмотреть код</h2>
-      <p>Все проекты открыты на GitHub Pages. Исходники, история обновлений и новые релизы —
-         в профиле на GitHub.</p>
+      <h2>Есть вопрос, идея или предложение?</h2>
+      <p>Напишите мне в Discord — отвечу по проектам, сотрудничеству и вопросам сайта.
+         Исходники всех работ открыты на GitHub.</p>
       <div class="hero-btns">
-        <a class="btn btn-primary" href="https://github.com/dect2868-debug" target="_blank" rel="noopener">GitHub · dect2868-debug</a>
-        <a class="btn btn-ghost" href="https://dect2868-debug.github.io/orbita/" target="_blank" rel="noopener">Начать с ORBITA →</a>
+        <button class="btn btn-discord" data-copy="thewerasa2.0" type="button">Discord · thewerasa2.0</button>
+        <a class="btn btn-ghost" href="contacts.html">Все контакты →</a>
       </div>
+      <div class="discord-line">Ник в Discord: <b>thewerasa2.0</b> · нажмите на кнопку, чтобы скопировать</div>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    © <span id="year">2026</span> dect2868-debug · Сайт-визитка · Сделано на чистом HTML / CSS / JavaScript
+    © <span id="year">2026</span> dect2868-debug · Сайт-визитка · Discord: <b>thewerasa2.0</b> ·
+    <a href="index.html">Главная</a> · <a href="projects.html">Проекты</a> ·
+    <a href="about.html">Обо мне</a> · <a href="contacts.html">Контакты</a>
   </div>
 </footer>
 
-<script>
-// Год в футере
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// Плавное появление блоков
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('in');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-// Счётчики в статистике
-const cio = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    const el = e.target;
-    const target = +el.dataset.count;
-    const suffix = el.dataset.suffix || '';
-    const dur = 1100;
-    const t0 = performance.now();
-    (function tick(now){
-      const p = Math.min((now - t0) / dur, 1);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
-      if (p < 1) requestAnimationFrame(tick);
-    })(t0);
-    cio.unobserve(el);
-  });
-}, { threshold: 0.6 });
-document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
-
-// Световое пятно под курсором на карточках
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('pointermove', (ev) => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100) + '%');
-    card.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100) + '%');
-  });
-});
-</script>
+<script src="main.js"></script>
 </body>
 </html>
