@@ -369,7 +369,12 @@ footer a:hover{color:var(--text)}
   .about-wrap{grid-template-columns:1fr}
 }
 @media(max-width:640px){
-  .nav-links a:not(.nav-cta){display:none}
+  .nav-inner{gap:14px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  .nav-inner::-webkit-scrollbar{display:none}
+  .logo{font-size:14px;flex:0 0 auto}
+  .nav-links{gap:16px;flex:0 0 auto}
+  .nav-links a{font-size:13.5px;white-space:nowrap}
+  .nav-cta{padding:8px 14px;font-size:13px}
   .hero{padding:66px 0 50px}
   .page-hero{padding:56px 0 4px}
   section{padding:54px 0}
