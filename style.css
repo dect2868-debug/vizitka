@@ -180,9 +180,11 @@ section{padding:70px 0}
   position:relative;overflow:hidden;display:block;text-decoration:none;color:var(--text);
   border:1px solid var(--line);border-radius:var(--radius);
   background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
-  padding:28px;transition:transform .35s,border-color .35s,box-shadow .35s;
+  padding:28px;
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));
+  transition:transform .35s,border-color .35s,box-shadow .35s;
 }
-.tile:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--acc) 55%,transparent);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.tile:hover{--ty:-6px;border-color:color-mix(in srgb,var(--acc) 55%,transparent);box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .tile .icon{
   width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:22px;margin-bottom:16px;
   background:color-mix(in srgb,var(--acc) 16%,transparent);
@@ -201,14 +203,16 @@ section{padding:70px 0}
   border:1px solid var(--line);border-radius:var(--radius);
   background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
   padding:32px;
+  transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));
   transition:transform .35s,border-color .35s,box-shadow .35s;
 }
+.tilt-live{transition:transform .07s linear!important}
 .card::before{
   content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s;
   background:radial-gradient(420px 260px at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--acc) 16%,transparent),transparent 70%);
   pointer-events:none;
 }
-.card:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--acc) 55%,transparent);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.card:hover{--ty:-6px;border-color:color-mix(in srgb,var(--acc) 55%,transparent);box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .card:hover::before{opacity:1}
 .card.wide{grid-column:1 / -1}
 .card-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
@@ -359,8 +363,8 @@ footer a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--
 footer a:hover{color:var(--text)}
 
 /* ---------- REVEAL ---------- */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
-.reveal.in{opacity:1;transform:none}
+.reveal{opacity:0;translate:0 26px;transition:opacity .7s ease,translate .7s ease}
+.reveal.in{opacity:1;translate:none}
 
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:880px){
@@ -383,7 +387,7 @@ footer a:hover{color:var(--text)}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
-  .reveal{opacity:1;transform:none}
+  .reveal{opacity:1;translate:none}
   html{scroll-behavior:auto}
 }
 
@@ -451,7 +455,7 @@ body.secret-on .grad::after{animation:glitchB 2.6s steps(1) infinite}
 
 /* Уведомление */
 .toast{
-  position:fixed;top:86px;left:50%;z-index:80;
+  position:fixed;top:calc(86px + var(--ti,0) * 76px);left:50%;z-index:80;
   display:flex;flex-direction:column;gap:3px;
   max-width:min(92vw,440px);
   padding:15px 22px;border-radius:16px;
@@ -468,13 +472,160 @@ body.secret-on .grad::after{animation:glitchB 2.6s steps(1) infinite}
 }
 .toast span{font-size:13.5px;color:var(--muted);line-height:1.5}
 
-/* Подсказка о пасхалке в футере */
+/* Подсказка о пасхалке в футере — см. блок ниже (.egg-hint) */
+
+@media(max-width:640px){
+  .toast{top:calc(70px + var(--ti,0) * 72px);padding:13px 18px}
+  .mode-pill .mp-off{display:none}
+}
+
+/* ---------- ПРОГРЕСС-БАРЫ НАВЫКОВ (страница «Обо мне») ---------- */
+.bars{display:grid;gap:13px;margin-top:4px}
+.bar-row{display:flex;align-items:center;gap:14px}
+.bar-row .br-name{flex:0 0 150px;font-size:13.5px;font-weight:700}
+.bar-row .br-val{
+  flex:0 0 42px;text-align:right;font-size:13px;font-weight:800;
+  color:var(--cyan);font-family:'Unbounded',sans-serif;
+}
+.bar{
+  flex:1;height:8px;border-radius:99px;overflow:hidden;
+  background:rgba(255,255,255,.07);border:1px solid var(--line);
+}
+.bar i{
+  display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));
+  box-shadow:0 0 12px rgba(63,224,255,.45);
+  transition:width 1.2s cubic-bezier(.2,.7,.3,1);
+}
+@media(max-width:640px){
+  .bar-row .br-name{flex:0 0 110px;font-size:12.5px}
+}
+
+/* ---------- СТРАНИЦА «СЕКРЕТЫ» ---------- */
+.egg-progress{
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:
+    radial-gradient(420px 200px at 15% 0%,rgba(139,123,255,.16),transparent 65%),
+    var(--card);
+  padding:clamp(26px,4vw,38px);margin-bottom:34px;
+}
+.egg-progress .ep-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.egg-progress .ep-top b{
+  font-family:'Unbounded',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);
+  background:linear-gradient(135deg,var(--text),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.egg-progress .ep-top span{color:var(--muted);font-size:14.5px}
+.ep-track{
+  height:12px;border-radius:99px;overflow:hidden;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);margin-bottom:14px;
+}
+.ep-track i{
+  display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--violet),var(--cyan),var(--green));
+  box-shadow:0 0 16px rgba(63,224,255,.5);
+  transition:width .8s cubic-bezier(.2,.7,.3,1);
+}
+.ep-note{color:var(--muted);font-size:14px}
+.ep-reset{
+  margin-top:16px;padding:10px 20px;border-radius:99px;cursor:pointer;
+  font-family:inherit;font-size:13.5px;font-weight:700;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);
+  transition:border-color .25s,color .25s,transform .25s;
+}
+.ep-reset:hover{transform:translateY(-2px);border-color:var(--amber);color:var(--amber)}
+
+.egg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.egg-card{
+  position:relative;overflow:hidden;
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  padding:28px;
+  transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));
+  transition:transform .35s,border-color .35s,box-shadow .35s,filter .35s;
+}
+.egg-card:hover{--ty:-6px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.ec-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ec-icon{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:21px;
+  background:color-mix(in srgb,var(--acc) 16%,transparent);
+  border:1px solid color-mix(in srgb,var(--acc) 40%,transparent);
+}
+.ec-state{
+  margin-left:auto;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 13px;border-radius:99px;color:var(--muted);
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+}
+.egg-card h3{font-family:'Unbounded',sans-serif;font-size:1.05rem;margin-bottom:10px}
+.ec-hint{color:var(--muted);font-size:14px;margin-bottom:14px}
+.ec-hint b{color:var(--cyan);font-weight:700}
+.ec-effect{
+  font-size:14px;padding:13px 16px;border-radius:14px;
+  border:1px dashed var(--line);background:rgba(255,255,255,.03);
+  color:var(--muted);filter:blur(5px);user-select:none;
+  transition:filter .4s,border-color .4s,color .4s,background .4s;
+}
+.egg-card.found{border-color:color-mix(in srgb,var(--acc) 55%,transparent)}
+.egg-card.found .ec-effect{
+  filter:none;color:var(--text);user-select:auto;
+  border:1px solid color-mix(in srgb,var(--acc) 45%,transparent);
+  background:color-mix(in srgb,var(--acc) 10%,transparent);
+}
+.egg-card.found .ec-state{
+  color:var(--green);border-color:rgba(63,224,160,.45);background:rgba(63,224,160,.12);
+}
+@media(max-width:880px){.egg-grid{grid-template-columns:1fr}}
+
+/* ---------- KONAMI: радужный режим ---------- */
+body.rainbow-on::before{animation:rainbowHue 5s linear infinite}
+@keyframes rainbowHue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
+
+/* ---------- DEBUG: рамки всех элементов ---------- */
+body.debug-on *{outline:1px solid rgba(63,224,160,.4);outline-offset:-1px}
+body.debug-on .nav{outline:2px solid rgba(255,182,72,.7)}
+
+/* ---------- HACKER: зелёный терминал ---------- */
+body.hacker-on{
+  font-family:'Consolas','Courier New',monospace;
+  --text:#8dff9e;--muted:#4fbe6e;--line:rgba(43,255,106,.28);
+  --card:rgba(0,45,12,.4);--violet:#2bff6a;--cyan:#2bff6a;--blue:#2bff6a;--amber:#b6ff5a;--green:#2bff6a;
+}
+body.hacker-on::before{
+  background:
+    radial-gradient(900px 600px at 15% -5%,rgba(43,255,106,.18),transparent 60%),
+    radial-gradient(800px 700px at 95% 15%,rgba(43,255,106,.12),transparent 60%),
+    #010a03;
+}
+body.hacker-on h1,body.hacker-on h2,body.hacker-on h3,body.hacker-on h4,
+body.hacker-on .logo,body.hacker-on .kicker,body.hacker-on .card-num,
+body.hacker-on .cc-value,body.hacker-on .step .n{
+  font-family:'Consolas','Courier New',monospace!important;letter-spacing:.03em;
+}
+body.hacker-on .btn-primary,body.hacker-on .nav-cta{
+  color:#011005;background:linear-gradient(135deg,#2bff6a,#b6ff5a);
+}
+body.hacker-on .grad,body.hacker-on .stat b{
+  background:linear-gradient(100deg,#2bff6a,#b6ff5a);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ---------- КОНФЕТТИ ---------- */
+.confetti{
+  position:fixed;z-index:90;width:9px;height:14px;border-radius:2px;
+  pointer-events:none;opacity:1;
+  transform:translate(0,0) rotate(0deg);
+  animation:confFly 1.5s cubic-bezier(.15,.65,.35,1) both;
+  animation-delay:var(--d,0s);
+}
+@keyframes confFly{
+  0%{transform:translate(0,0) rotate(0deg);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) rotate(var(--rot));opacity:0}
+}
+
+/* ---------- Подсказка о пасхалках (футер) ---------- */
 .egg-hint{
   display:block;margin-top:10px;font-size:12.5px;
   color:rgba(152,160,189,.7);letter-spacing:.02em;
+  cursor:pointer;transition:color .25s;
 }
-
-@media(max-width:640px){
-  .toast{top:70px;padding:13px 18px}
-  .mode-pill .mp-off{display:none}
-}
+.egg-hint:hover{color:var(--cyan)}

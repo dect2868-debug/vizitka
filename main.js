@@ -49,6 +49,8 @@ document.querySelectorAll('[data-copy]').forEach(function (btn) {
       var old = btn.textContent;
       btn.textContent = 'Скопировано ✓';
       btn.classList.add('copied');
+      var r = btn.getBoundingClientRect();
+      confettiAt(r.left + r.width / 2, r.top + r.height / 2, 16);
       setTimeout(function () {
         btn.textContent = old;
         btn.classList.remove('copied');
@@ -74,6 +76,301 @@ function fallbackCopy(text) {
   try { document.execCommand('copy'); } catch (e) {}
   document.body.removeChild(ta);
 }
+
+/* ============================================================
+   СИСТЕМА ПАСХАЛОК: реестр, награды и новые эффекты
+   - слово ORBITA  → скрытый космический режим
+   - Konami-код    → радужный режим + конфетти
+   - слово DEBUG   → режим отладки (рамки всех элементов)
+   - 5 кликов по подсказке в футере → хакерский терминал
+   - клавиша ?     → шпаргалка по секретам
+   Прогресс хранится в localStorage, страница «Секреты» показывает его.
+   ============================================================ */
+var EGGS = [
+  { id: 'orbita', name: 'Режим ORBITA', hint: 'слово из 6 букв — название флагман-проекта',
+    effect: 'Скрытый космический режим: звёзды, глитч заголовка и своя палитра' },
+  { id: 'konami', name: 'Konami-код', hint: 'стрелки: ↑↑↓↓←→←→ и B A',
+    effect: 'Радужный режим всего сайта и конфетти на весь экран' },
+  { id: 'debug', name: 'Режим отладки', hint: 'слово из 5 букв — как в DevTools',
+    effect: 'Подсвечиваются рамки всех элементов страницы' },
+  { id: 'hacker', name: 'Хакерский терминал', hint: '5 кликов по подсказке в футере',
+    effect: 'Сайт превращается в зелёный моноширинный терминал' },
+  { id: 'cheat', name: 'Шпаргалка', hint: 'клавиша вопроса на клавиатуре',
+    effect: 'Мгновенные подсказки по ещё не найденным секретам' }
+];
+var EGG_STORE = 'vizitka-eggs';
+
+function eggList() {
+  try { return JSON.parse(localStorage.getItem(EGG_STORE)) || []; } catch (e) { return []; }
+}
+function eggIsFound(id) { return eggList().indexOf(id) !== -1; }
+function eggMeta(id) {
+  for (var i = 0; i < EGGS.length; i++) if (EGGS[i].id === id) return EGGS[i];
+  return null;
+}
+function eggFound(id) {
+  if (!id || eggIsFound(id)) return false;
+  var list = eggList();
+  list.push(id);
+  try { localStorage.setItem(EGG_STORE, JSON.stringify(list)); } catch (e) {}
+  var meta = eggMeta(id);
+  vizToast('⭐ Пасхалка найдена: ' + (meta ? meta.name : id),
+    'Открыто ' + list.length + ' из ' + EGGS.length + ' секретов. Страница «Секреты» обновлена.');
+  try {
+    document.dispatchEvent(new CustomEvent('eggfound', { detail: { id: id, total: list.length } }));
+  } catch (e) {}
+  return true;
+}
+
+/* ---------- Общее уведомление ---------- */
+function restackToasts() {
+  var list = document.querySelectorAll('.toast');
+  for (var i = 0; i < list.length; i++) list[i].style.setProperty('--ti', i);
+}
+function vizToast(title, text) {
+  // Больше четырёх уведомлений — самое старое закрываем
+  var all = document.querySelectorAll('.toast');
+  if (all.length >= 4 && all[0].parentNode) all[0].parentNode.removeChild(all[0]);
+
+  var t = document.createElement('div');
+  t.className = 'toast';
+  var b = document.createElement('b');
+  b.textContent = title;
+  var s = document.createElement('span');
+  s.textContent = text;
+  t.appendChild(b);
+  t.appendChild(s);
+  document.body.appendChild(t);
+  restackToasts();
+  requestAnimationFrame(function () { t.classList.add('show'); });
+  setTimeout(function () {
+    t.classList.remove('show');
+    setTimeout(function () {
+      if (t.parentNode) t.parentNode.removeChild(t);
+      restackToasts();
+    }, 500);
+  }, 4500);
+}
+
+/* ---------- Конфетти ---------- */
+function confettiAt(x, y, n) {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  } catch (e) {}
+  var colors = ['#3fe0a0', '#3fe0ff', '#8b7bff', '#ffb648', '#ff5f8f', '#ffffff'];
+  for (var i = 0; i < n; i++) {
+    var s = document.createElement('span');
+    s.className = 'confetti';
+    s.style.left = x + 'px';
+    s.style.top = y + 'px';
+    s.style.background = colors[i % colors.length];
+    s.style.setProperty('--tx', (Math.random() * 260 - 130).toFixed(0) + 'px');
+    s.style.setProperty('--ty', (Math.random() * 320 + 120).toFixed(0) + 'px');
+    s.style.setProperty('--rot', (Math.random() * 720 - 360).toFixed(0) + 'deg');
+    s.style.setProperty('--d', (Math.random() * 0.35).toFixed(2) + 's');
+    document.body.appendChild(s);
+    (function (el) {
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1900);
+    })(s);
+  }
+}
+function confettiRain() {
+  var w = window.innerWidth;
+  for (var i = 0; i < 6; i++) confettiAt((w / 6) * (i + 0.5) - Math.random() * 60, -8, 14);
+}
+
+/* ---------- Секретная страница «Секреты» ---------- */
+(function renderSecrets() {
+  var wrap = document.querySelector('[data-egg-list]');
+  if (!wrap) return;
+  var cards = wrap.querySelectorAll('.egg-card');
+
+  function update() {
+    var found = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      var ok = eggIsFound(c.getAttribute('data-egg'));
+      if (ok) {
+        found++;
+        if (!c.classList.contains('found')) {
+          c.classList.add('found');
+          var st = c.querySelector('.ec-state');
+          if (st) st.textContent = 'найдено ✓';
+        }
+      }
+    }
+    var cnt = document.getElementById('egg-count');
+    if (cnt) cnt.textContent = found;
+    var bar = document.getElementById('egg-bar');
+    if (bar) bar.style.width = (found / EGGS.length * 100) + '%';
+    var note = document.getElementById('egg-note');
+    if (note) {
+      note.textContent = found === EGGS.length
+        ? 'Все секреты найдены — ты настоящий исследователь сайта.'
+        : 'Найдено ' + found + ' из ' + EGGS.length + '. Подсказки есть на карточках.';
+    }
+    var reset = document.getElementById('egg-reset');
+    if (reset) reset.style.display = found ? '' : 'none';
+  }
+
+  document.addEventListener('eggfound', update);
+  update();
+
+  var reset = document.getElementById('egg-reset');
+  if (reset) {
+    reset.addEventListener('click', function () {
+      try { localStorage.removeItem(EGG_STORE); } catch (e) {}
+      update();
+      document.querySelectorAll('.egg-card.found').forEach(function (c) {
+        c.classList.remove('found');
+        var st = c.querySelector('.ec-state');
+        if (st) st.textContent = 'не найдено';
+      });
+      vizToast('Прогресс сброшен', 'Все 5 секретов снова скрыты. Охота начинается заново.');
+    });
+  }
+})();
+
+/* ---------- Konami-код → радуга ---------- */
+var KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+var kIdx = 0;
+var dbgBuf = '';
+
+function toggleRainbow() {
+  var on = !document.body.classList.contains('rainbow-on');
+  document.body.classList.toggle('rainbow-on', on);
+  if (on) {
+    eggFound('konami');
+    confettiRain();
+    vizToast('🌈 Konami-код принят', 'Радужный режим включён. Введи код ещё раз, чтобы выключить.');
+  } else {
+    vizToast('Радуга ушла', 'Обычные цвета восстановлены.');
+  }
+}
+function toggleDebug() {
+  var on = !document.body.classList.contains('debug-on');
+  document.body.classList.toggle('debug-on', on);
+  if (on) {
+    eggFound('debug');
+    vizToast('🛠 Режим отладки включён', 'Видны рамки всех элементов. Напиши DEBUG ещё раз, чтобы выключить.');
+  } else {
+    vizToast('Режим отладки выключен', 'Страница снова чистая.');
+  }
+}
+function showCheat() {
+  var isNew = eggFound('cheat');
+  var left = [];
+  for (var i = 0; i < EGGS.length; i++) if (!eggIsFound(EGGS[i].id)) left.push(EGGS[i]);
+  if (!isNew && !left.length) {
+    vizToast('🗝 Шпаргалка', 'Все 5 пасхалок уже найдены. Прогресс — на странице «Секреты».');
+    return;
+  }
+  vizToast('🗝 Шпаргалка по секретам', left.length
+    ? 'Осталось ' + left.length + ': ' + left.slice(0, 2).map(function (g) { return g.hint; }).join(' · ')
+    : 'Все 5 пасхалок открыты — смотри страницу «Секреты».');
+}
+
+document.addEventListener('keydown', function (e) {
+  var t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+
+  var k = e.key;
+
+  // Konami-код
+  if (k === KONAMI[kIdx]) {
+    kIdx++;
+    if (kIdx === KONAMI.length) { kIdx = 0; toggleRainbow(); }
+  } else {
+    kIdx = (k === KONAMI[0]) ? 1 : 0;
+  }
+
+  // Слово DEBUG
+  if (k.length === 1) {
+    dbgBuf = (dbgBuf + k.toLowerCase()).slice(-16);
+    if (dbgBuf.indexOf('debug') !== -1) { dbgBuf = ''; toggleDebug(); }
+  }
+
+  // Шпаргалка
+  if (k === '?') showCheat();
+});
+
+/* ---------- 5 кликов по подсказке в футере → терминал ---------- */
+(function hackerTrigger() {
+  var clicks = 0, timer = null;
+  document.querySelectorAll('.egg-hint').forEach(function (el) {
+    el.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      clicks++;
+      clearTimeout(timer);
+      timer = setTimeout(function () { clicks = 0; }, 1500);
+      if (clicks >= 5) {
+        clicks = 0;
+        var on = !document.body.classList.contains('hacker-on');
+        document.body.classList.toggle('hacker-on', on);
+        if (on) {
+          eggFound('hacker');
+          confettiRain();
+          vizToast('💻 Терминал подключён', 'Весь сайт перешёл в хакерский режим. Кликни по подсказке ещё 5 раз, чтобы выключить.');
+        } else {
+          vizToast('Терминал отключён', 'Интерфейс вернулся в обычное состояние.');
+        }
+      }
+    });
+  });
+})();
+
+/* ---------- 3D-наклон карточек и плиток ---------- */
+(function tilt() {
+  var hoverable = false;
+  try { hoverable = window.matchMedia('(hover:hover)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (!hoverable) return;
+
+  document.querySelectorAll('.card, .tile').forEach(function (el) {
+    el.addEventListener('pointermove', function (ev) {
+      var r = el.getBoundingClientRect();
+      var px = (ev.clientX - r.left) / r.width - 0.5;
+      var py = (ev.clientY - r.top) / r.height - 0.5;
+      el.classList.add('tilt-live');
+      el.style.setProperty('--ry', (px * 8).toFixed(2) + 'deg');
+      el.style.setProperty('--rx', (-py * 8).toFixed(2) + 'deg');
+    });
+    el.addEventListener('pointerleave', function () {
+      el.classList.remove('tilt-live');
+      el.style.removeProperty('--rx');
+      el.style.removeProperty('--ry');
+    });
+  });
+})();
+
+/* ---------- Прогресс-бары навыков ---------- */
+(function bars() {
+  var rows = document.querySelectorAll('.bar-row');
+  if (!rows.length) return;
+  var fill = function (row) {
+    var el = row.querySelector('i[data-level]');
+    if (el) el.style.width = (+el.dataset.level || 0) + '%';
+  };
+  try {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        fill(e.target);
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.5 });
+    rows.forEach(function (row) { io.observe(row); });
+    // Подстраховка: если наблюдатель не сработал, заполняем бары статично
+    setTimeout(function () {
+      rows.forEach(function (row) {
+        var el = row.querySelector('i[data-level]');
+        if (el && !el.style.width) fill(row);
+      });
+    }, 1200);
+  } catch (e) {
+    rows.forEach(fill);
+  }
+})();
 
 /* ============================================================
    ПАСХАЛКА: секретное слово + скрытый «режим ORBITA»
@@ -106,23 +403,8 @@ function fallbackCopy(text) {
     el.setAttribute('data-text', el.textContent);
   });
 
-  /* ---------- Уведомление ---------- */
-  function toast(title, text) {
-    var t = document.createElement('div');
-    t.className = 'toast';
-    var b = document.createElement('b');
-    b.textContent = title;
-    var s = document.createElement('span');
-    s.textContent = text;
-    t.appendChild(b);
-    t.appendChild(s);
-    document.body.appendChild(t);
-    requestAnimationFrame(function () { t.classList.add('show'); });
-    setTimeout(function () {
-      t.classList.remove('show');
-      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 500);
-    }, 4500);
-  }
+  /* ---------- Уведомление (общее) ---------- */
+  var toast = vizToast;
 
   /* ---------- Кнопка-пилюля «режим включён» ---------- */
   function ensurePill() {
@@ -270,6 +552,7 @@ function fallbackCopy(text) {
       ensurePill().classList.add('on');
       startFX();
       burst();
+      eggFound('orbita');
       toast('🛰  Режим ORBITA включён',
         n > 1
           ? 'С возвращением, путешественник! Это твой визит №' + n + ' в режим.'
